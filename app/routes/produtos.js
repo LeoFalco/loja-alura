@@ -1,3 +1,4 @@
+var dbConnection = require("../infra/db-connection");
 
 module.exports = function (app) {
 
@@ -11,13 +12,7 @@ module.exports = function (app) {
         var data = new Date().toISOString();
         console.log(data + " GET /produtos")
 
-        var mysql = require("mysql");
-        var con = mysql.createConnection({
-            user: "root",
-            password: "",
-            port: "3306",
-            database: "loja_alura"
-        });
+        var con = dbConnection();
 
         con.query("select * from livros", function (err, result) {
             if (err) {
@@ -28,7 +23,6 @@ module.exports = function (app) {
             res.header("Content-Type", 'application/json');
             res.send(JSON.stringify(result, null, 4));
             */
-            console.log(result);
             res.render("produtos/listar", { lista: result });
             con.end();
         })

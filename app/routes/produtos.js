@@ -9,19 +9,14 @@ module.exports = function (app) {
         var data = new Date().toISOString();
         console.log(data + " GET /produtos")
 
-        var con = app.infra.connectionFactory();
+        var produtoDao = app.infra.produtoDao;
 
-        con.query("select * from livros", function (err, result) {
+        produtoDao.listar(function (err, result) {
             if (err) {
                 throw err;
             }
-
-            /*
-            res.header("Content-Type", 'application/json');
-            res.send(JSON.stringify(result, null, 4));
-            */
+            
             res.render("produtos/listar", { lista: result });
-            con.end();
         })
     });
     return app;

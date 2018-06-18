@@ -1,7 +1,4 @@
-var dbConnection = require("../infra/db-connection");
-
 module.exports = function (app) {
-
     // todo remove redirect
     app.get("/", function (req, res) {
         res.redirect("/produtos");
@@ -12,7 +9,7 @@ module.exports = function (app) {
         var data = new Date().toISOString();
         console.log(data + " GET /produtos")
 
-        var con = dbConnection();
+        var con = app.infra.connectionFactory();
 
         con.query("select * from livros", function (err, result) {
             if (err) {

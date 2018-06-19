@@ -12,30 +12,33 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Listagem de produtos</h1>
-                <table class="table table-bordered">
-                    <thead>
-                        <th>ID</th>
-                        <th>Titulo</th>
-                        <th>Descrição</th>
-                        <th>Preço</th>
-                    </thead>
-                    <tbody>
-                        <%for (i = 0; i < lista.length; i++) { %>
-                            <tr>
-                                <td><%= lista[i].id %></td>
-                                <td><%= lista[i].titulo %></td>
-                                <td><%= lista[i].descricao %></td>
-                                <td><%= lista[i].preco %></td>
-                            </tr>
-                            <%}%>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="container">        
+        <h1>Listagem de produtos</h1>
+        <form method="post" action="/produtos/" class="form-inline">
+            <input type="text" class="form-control" id="titulo" name="titulo" placeholder="titulo">
+            <input type="text" class="form-control" id="descricao" name="descricao" placeholder="descrição">    
+            <input type="number" class="form-control" id="preco" name="preco" step="0.01" min="0.00" placeholder="preço">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </form>
+        
+        <table class="table table-bordered">
+            <thead>
+                <th>ID</th>
+                <th>Titulo</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+            </thead>
+            <tbody>
+                <%for (i = 0; i < lista.length; i++) { %>
+                    <tr>
+                        <td><%= lista[i].id %></td>
+                        <td><%= lista[i].titulo %></td>
+                        <td><%= lista[i].descricao %></td>
+                        <td><%= lista[i].preco %></td>
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
     </div>
 
     <!-- Optional JavaScript -->

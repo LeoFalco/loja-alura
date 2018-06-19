@@ -6,18 +6,22 @@ module.exports = function (app) {
 
     app.get("/produtos", function (req, res) {
 
-        var data = new Date().toISOString();
-        console.log(data + " GET /produtos")
-
-        var produtoDao = app.infra.produtoDao;
+        var connection = app.infra.connectionFactory();
+        var produtoDao = new app.infra.ProdutoDao(connection);
 
         produtoDao.listar(function (err, result) {
             if (err) {
                 throw err;
             }
-            
+
             res.render("produtos/listar", { lista: result });
         })
     });
+
+    app.post("/produtos", function (req, res) {
+        console.log(req.body);
+        res.json(req.body);
+    });
+
     return app;
 }

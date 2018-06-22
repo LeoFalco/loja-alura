@@ -1,4 +1,4 @@
-var mysql = require("mysql");
+const mysql = require("mysql");
 
 module.exports = function () {
     return function () {
@@ -9,4 +9,4 @@ module.exports = function () {
             database: "loja_alura"
         });
     }
-}
+};

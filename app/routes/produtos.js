@@ -2,19 +2,21 @@ module.exports = function (app) {
     // todo remove redirect
     app.get("/", function (req, res) {
         res.redirect("/produtos");
-    })
+    });
 
     app.get("/produtos", function (req, res) {
 
-        var connection = app.infra.connectionFactory();
-        var produtoDao = new app.infra.ProdutoDao(connection);
+        const connection = app.infra.connectionFactory();
+        const produtoDao = new app.infra.ProdutoDao(connection);
+
+        console.log(app.infra);
 
         produtoDao.listar(function (err, result) {
             if (err) {
                 throw err;
             }
 
-            res.render("produtos/listar", { lista: result });
+            res.render("produtos/listar", {lista: result});
         })
     });
 
@@ -24,4 +26,4 @@ module.exports = function (app) {
     });
 
     return app;
-}
+};

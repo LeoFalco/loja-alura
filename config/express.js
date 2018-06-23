@@ -4,6 +4,11 @@ const bodyParser = require('body-parser');
 
 module.exports = function () {
     const app = express();
+
+    // definir bodyparser antes das rotas
+    app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+    app.use(bodyParser.json());
+
     load("routes", { cwd: "app" })
         .then("infra")
         .into(app);
@@ -11,6 +16,6 @@ module.exports = function () {
     app.set("view engine", "ejs");
     app.set("views", "./app/views");
 
-    app.use(bodyParser.urlencoded({extended: true})); // support encoded bodies
+
     return app;
 };

@@ -9,17 +9,29 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
           crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+            crossorigin="anonymous"></script>
+    </body>
     <title>Listagem de produtos</title>
 </head>
 <body>
 <div class="container">
     <h1>Listagem de produtos</h1>
-    <form class="form-inline mb-5 mt-5 " method="post" action="/produtos">
+    <form class="form-inline mb-5 mt-5 ">
         <input type="text" class="form-control mr-2 mt-2" id="titulo" name="titulo" placeholder="titulo">
         <input type="text" class="form-control mr-2 mt-2" id="descricao" name="descricao" placeholder="descrição">
         <input type="number" class="form-control mr-2 mt-2" id="preco" name="preco" step="0.01" min="0.00"
                placeholder="preço">
-        <button type="submit" class="btn btn-primary mr-2 mt-2">Salvar</button>
+        <button onclick=adicionar() class="btn btn-primary mr-2 mt-2">Salvar</button>
     </form>
 
     <table class="table table-bordered">
@@ -33,26 +45,50 @@
         <% for (i = 0; i < lista.length; i++) { %>
         <tr>
             <td><%= lista[i].id %></td>
-            <td><%= lista[i].livro %></td>
+            <td><%= lista[i].titulo %></td>
             <td><%= lista[i].descricao %></td>
             <td><%= lista[i].preco %></td>
+            <td><button>Editar</button></td>
+            <td><button onclick="apagar(<%= lista[i].id %>)">Apagar</button></td>
         </tr>
         <% } %>
         </tbody>
     </table>
 </div>
+<script>
 
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-        integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-        crossorigin="anonymous"></script>
-</body>
+    function valueOfInput(inputId){
+        return document.getElementById(inputId).value;
+    }
+    
+    function adicionar(){
+        var produto = {
+            titulo: valueOfInput('titulo'),
+            descricao: valueOfInput('descricao'),
+            preco: valueOfInput('preco'),
+        }
 
+        console.log(produto);
+        $.ajax({
+            type: "POST",
+            url: "/produtos",
+            dataType  : 'json',
+            data: produto,
+            success: function(){
+                location.reload();
+            }
+        });
+    }
+
+    function apagar(id){
+        console.log(id);
+        $.ajax({
+            type: "DELETE",
+            url: "/produtos/" + id,
+            success: function(){
+                location.reload();
+            }
+        });
+    }
+</script>
 </html>

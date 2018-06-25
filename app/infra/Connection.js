@@ -1,12 +1,8 @@
 const mysql = require("mysql");
+const env = require("../enviroment/enviroment")()
 
 module.exports = function () {
     return function () {
-        return mysql.createConnection({
-            user: "root",
-            password: "",
-            port: "3306",
-            database: "loja_alura"
-        });
+        return mysql.createConnection(env.trampo);
     }
 };

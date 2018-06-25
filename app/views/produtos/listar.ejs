@@ -5,33 +5,26 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- octicons cdn-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.min.css">
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
           crossorigin="anonymous">
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
-            integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
-            crossorigin="anonymous"></script>
-    </body>
     <title>Listagem de produtos</title>
 </head>
+
 <body>
 <div class="container">
     <h1>Listagem de produtos</h1>
-    <form class="form-inline mb-5 mt-5 ">
-        <input type="text" class="form-control mr-2 mt-2" id="titulo" name="titulo" placeholder="titulo">
-        <input type="text" class="form-control mr-2 mt-2" id="descricao" name="descricao" placeholder="descrição">
+    <form class="form-inline mb-5 mt-5 " onsubmit="adicionar(event)">
+        <input type="text" class="form-control mr-2 mt-2" id="titulo" name="titulo" placeholder="titulo" required>
+        <input type="text" class="form-control mr-2 mt-2" id="descricao" name="descricao" placeholder="descrição" required>
         <input type="number" class="form-control mr-2 mt-2" id="preco" name="preco" step="0.01" min="0.00"
-               placeholder="preço">
-        <button onclick=adicionar() class="btn btn-primary mr-2 mt-2">Salvar</button>
+               placeholder="preço" required>
+        <button type="submit" class="btn btn-primary mr-2 mt-2">Salvar</button>
     </form>
 
     <table class="table table-bordered">
@@ -40,6 +33,7 @@
         <th>Titulo</th>
         <th>Descrição</th>
         <th>Preço</th>
+        <th>Ações</th>
         </thead>
         <tbody>
         <% for (i = 0; i < lista.length; i++) { %>
@@ -48,47 +42,107 @@
             <td><%= lista[i].titulo %></td>
             <td><%= lista[i].descricao %></td>
             <td><%= lista[i].preco %></td>
-            <td><button>Editar</button></td>
-            <td><button onclick="apagar(<%= lista[i].id %>)">Apagar</button></td>
+            <td>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button class="btn btn-warning">
+                        <span class="octicon octicon-pencil"></span>
+                    </button>
+                    <!--
+                    <button class="btn btn-danger" onclick="showModalExcluir(<%= lista[i].id %>)">
+                        <span class="octicon octicon-trashcan "></span>
+                    </button>
+                    -->
+                    <button class="btn btn-danger" onclick="apagar(<%= lista[i].id %>)">
+                        <span class="octicon octicon-trashcan "></span>
+                    </button>
+                </div>
+            </td>
         </tr>
         <% } %>
         </tbody>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="md-excluir" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="md-excluir-title">Tem certeza que deseja excluir?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <code id="md-excluir-body">
+
+                </code>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
-    function valueOfInput(inputId){
+    function showModalExcluir() {
+        console.log("antes teste");
+        $('#md-excluir').modal('show');
+        $('#md-excluir-body');
+        console.log("teste");
+    }
+
+    function valueOfInput(inputId) {
         return document.getElementById(inputId).value;
     }
-    
-    function adicionar(){
-        var produto = {
+
+    function adicionar(event) {
+        event.preventDefault();
+
+        let produto = {
             titulo: valueOfInput('titulo'),
             descricao: valueOfInput('descricao'),
             preco: valueOfInput('preco'),
-        }
+        };
 
-        console.log(produto);
         $.ajax({
             type: "POST",
             url: "/produtos",
-            dataType  : 'json',
+            dataType: 'json',
             data: produto,
-            success: function(){
+            success: function (data) {
+                console.log("post /produtos " + JSON.stringify(data));
                 location.reload();
             }
         });
     }
 
-    function apagar(id){
+    function apagar(id) {
         console.log(id);
         $.ajax({
             type: "DELETE",
             url: "/produtos/" + id,
-            success: function(){
+            success: function () {
+                console.log("delete /produtos" + id);
                 location.reload();
             }
         });
     }
 </script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+        integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+        crossorigin="anonymous"></script>
+</body>
 </html>

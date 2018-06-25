@@ -7,14 +7,24 @@ module.exports = function (app) {
             if (err) {
                 throw err;
             }
-            console.log("get");
-            res.render("produtos/listar", { lista: result });
+
+            res.format({
+                html: function () {
+                    res.render("produtos/listar", {lista: result});
+                    console.log("get /produtos html " + result.length + " registros");
+                },
+                json: function () {
+                    res.json(result);
+                    console.log("get /produtos json " + result.length + " registros");
+                }
+            });
         });
+
+        produtoDao.end();
     });
 
     app.post("/produtos", function (req, res) {
-        var produto = req.body;
-        console.log(produto);
+        const produto = req.body;
 
         const produtoDao = new app.infra.ProdutoDao();
 
@@ -22,13 +32,15 @@ module.exports = function (app) {
             if (err) {
                 throw err;
             }
-            console.log(result);
-            res.send(result);
+
+            produto.id = result.insertId;
+            console.log("post /produtos " + JSON.stringify(produto));
+            res.send(produto);
         });
     });
 
     app.delete("/produtos/:id", function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
         const produtoDao = new app.infra.ProdutoDao();
 
         produtoDao.apagar(id, function (err, result) {

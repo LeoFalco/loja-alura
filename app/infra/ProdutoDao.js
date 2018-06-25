@@ -14,6 +14,10 @@ ProdutoDao.prototype.apagar = function (id, callback) {
     this.con.query("delete from produto where id = ?", id, callback);
 };
 
+ProdutoDao.prototype.end = function () {
+    this.con.end();
+};
+
 module.exports = function () {
     return ProdutoDao;
 };

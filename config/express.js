@@ -1,14 +1,16 @@
 const express = require("express");
 const load = require("express-load");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-module.exports = function () {
-    const app = express();
+module.exports = function() {
+  const app = express();
 
-    // definir bodyparser antes das rotas
-    app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
-    app.use(bodyParser.json());
+  // definir bodyparser antes das rotas
+  app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+  app.use(bodyParser.json());
 
+  /*
     app.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
@@ -18,16 +20,20 @@ module.exports = function () {
         } else {
             next();
         }
-    });
+        */
 
+  app.use(cors());
 
-    load("routes", { cwd: "app" })
-        .then("infra")
-        .into(app);
+  // definir bodyparser antes das rotas
+  app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+  app.use(bodyParser.json());
 
-    app.set("view engine", "ejs");
-    app.set("views", "./app/views");
+  load("routes", { cwd: "app" })
+    .then("infra")
+    .into(app);
 
+  app.set("view engine", "ejs");
+  app.set("views", "./app/views");
 
-    return app;
+  return app;
 };

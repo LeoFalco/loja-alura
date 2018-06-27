@@ -18,6 +18,6 @@ ProdutoDao.prototype.end = function () {
     this.con.end();
 };
 
-module.exports = function () {
+export default function () {
     return ProdutoDao;
 };

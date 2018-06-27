@@ -36,7 +36,7 @@
         <th>Ações</th>
         </thead>
         <tbody>
-        <% for (i = 0; i < lista.length; i++) { %>
+        <% for (var i = 0; i < lista.length; i++) { %>
         <tr>
             <td><%= lista[i].id %></td>
             <td><%= lista[i].titulo %></td>
@@ -45,7 +45,7 @@
             <td>
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <button class="btn btn-warning">
-                        <span class="octicon octicon-pencil"></span>
+                        <span class="octicon octicon-pencil"/>
                     </button>
                     <!--
                     <button class="btn btn-danger" onclick="showModalExcluir(<%= lista[i].id %>)">
@@ -53,7 +53,7 @@
                     </button>
                     -->
                     <button class="btn btn-danger" onclick="apagar(<%= lista[i].id %>)">
-                        <span class="octicon octicon-trashcan "></span>
+                        <span class="octicon octicon-trashcan "/>
                     </button>
                 </div>
             </td>

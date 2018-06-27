@@ -3,6 +3,7 @@ module.exports = function (app) {
     app.get("/produtos", function (req, res) {
         const produtoDao = new app.infra.ProdutoDao();
 
+    
         produtoDao.listar(function (err, result) {
             if (err) {
                 throw err;

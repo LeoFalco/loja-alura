@@ -9,11 +9,17 @@ module.exports = function () {
     app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
     app.use(bodyParser.json());
 
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
+        res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        if (req.method === 'OPTIONS') {
+            res.send(200);
+        } else {
+            next();
+        }
     });
+
 
     load("routes", { cwd: "app" })
         .then("infra")
